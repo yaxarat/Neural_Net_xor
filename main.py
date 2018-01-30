@@ -44,10 +44,21 @@ def train(x, t, v, w, bv, bw):
     Ew = Y - t
     Ev = tanh_prime(A) * np.dot(w, Ew)
 
-    #predicting loss
+    # predicting loss
     dW = np.outer(Z, Ew)
     dV = np.outer(x, Ev)
 
     # can be shortened using tensorflow
-    loss = -np.mean(t * np.log(Y) + (1 - t) * np.log(1 -Y)) # cross-entropy
-    
+    loss = -np.mean(t * np.log(Y) + (1 - t) * np.log(1 - Y))  # cross-entropy
+
+    return loss, (dV, dW, Ev, Ew)
+
+
+# END of training
+# START of prediction
+
+def predict(x, v, w, bv, bw):
+    A = np.dot(x, v) + bv
+    B = np.dot(np.tanh(A), w) + bw
+    return (sigmoid(B) > 0.5).atype(int)
+
