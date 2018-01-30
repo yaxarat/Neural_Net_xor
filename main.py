@@ -1,4 +1,5 @@
 # This sample project will cover what is considered to be a classification neural network.
+# It will predict xor value of a given input
 
 # Dependencies
 import numpy as np  # used for matrix multiplications
@@ -41,17 +42,17 @@ def train(x, t, v, w, bv, bw):
     Y = sigmoid(B)
 
     # backward propagation
-    Ew = Y - t
-    Ev = tanh_prime(A) * np.dot(w, Ew)
+    ew = Y - t
+    ev = tanh_prime(A) * np.dot(w, ew)
 
     # predicting loss
-    dW = np.outer(Z, Ew)
-    dV = np.outer(x, Ev)
+    dw = np.outer(Z, ew)
+    dv = np.outer(x, ev)
 
     # can be shortened using tensorflow
     loss = -np.mean(t * np.log(Y) + (1 - t) * np.log(1 - Y))  # cross-entropy
 
-    return loss, (dV, dW, Ev, Ew)
+    return loss, (dv, dw, ev, ew)
 
 
 # END of training
@@ -76,7 +77,7 @@ parameters = [V, W, bv, bw]
 
 # generate data
 X = np.random.binomial(1, 0.5, (n_sample, n_in))
-T = X^1
+T = X ^ 1
 
 # Training
 for epoch in range(100):
