@@ -60,5 +60,48 @@ def train(x, t, v, w, bv, bw):
 def predict(x, v, w, bv, bw):
     A = np.dot(x, v) + bv
     B = np.dot(np.tanh(A), w) + bw
-    return (sigmoid(B) > 0.5).atype(int)
+    return (sigmoid(B) > 0.5).astype(int)
 
+
+# creating 2 layers of NN
+V = np.random.normal(scale=0.1, size=(n_in, n_hidden))
+W = np.random.normal(scale=0.1, size=(n_hidden, n_out))
+
+# using bias
+bv = np.zeros(n_hidden)
+bw = np.zeros(n_out)
+
+# input parameters
+parameters = [V, W, bv, bw]
+
+# generate data
+X = np.random.binomial(1, 0.5, (n_sample, n_in))
+T = X^1
+
+# Training
+for epoch in range(100):
+    err = []
+    update = [0] * len(parameters)
+
+    # time the training
+    t0 = time.clock()
+    # update weights for each data point
+    for i in range(X.shape[0]):
+        loss, grad = train(X[i], T[i], * parameters)
+        # update loss
+        for j in range(len(parameters)):
+            parameters[j] -= update[j]
+
+        for j in range(len(parameters)):
+            update[j] = learning_rate * grad[j] + momentum * update[j]
+
+        err.append(loss)
+
+    print('Epoch: %d, Loss: %8f, Time: %.4fs' %(epoch, np.mean(err), time.clock() - t0))
+
+
+# NOW PREDICT!
+x = np.random.binomial(1, 0.5, n_in)
+print('XOR prediction')
+print(x)
+print(predict(x, *parameters))
